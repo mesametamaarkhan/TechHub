@@ -24,6 +24,13 @@ router.post('/submit-support-query', authenticateToken, async (req, res) => {
         });
 
         await supportTicket.save();
+
+        const notification = new Notification({
+            userId: order.userId,
+            message: `Your support ticket with Ticket#${supportTicket._id} has been forwarded.`
+        });
+
+        await notification.save();
         res.status(200).json({ message: 'Support Ticket created successfully', supportTicket });
     }
     catch(error) {
@@ -73,7 +80,13 @@ router.put('/update-status/:id', authenticateToken, authorizeAdmin, async (req, 
             return res.status(404).json({ message: "Ticket not found." });
         }
 
-        res.status(200).json({ message: "Ticket status updated successfully." ,ticket });
+        const notification = new Notification({
+            userId: order.userId,
+            message: `Your support ticket with Ticket#${ticket._id} has been completed.`
+        });
+
+        await notification.save();
+        res.status(200).json({ message: "Ticket status updated successfully." , ticket });
     }
     catch(error) {
         res.status(500).json({ message: "Server error" , error});

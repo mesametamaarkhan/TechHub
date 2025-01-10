@@ -6,7 +6,7 @@ import authorizeAdmin from '../middleware/AuthorizeAdmin.js';
 import Stripe from 'stripe';
 
 const router = express.Router();
-const stripe = new Stripe('sk_test_51QffY8KL1GLslAWPkh4ugqLuuDGAFtRrX1GkZDFPYrOkdYfthnzkuEuH4UVBlPJJJL74rSW66cWW4wIiX8Rxprt900VpDH8PFg');
+// const stripe = new Stripe('sk_test_51QffY8KL1GLslAWPkh4ugqLuuDGAFtRrX1GkZDFPYrOkdYfthnzkuEuH4UVBlPJJJL74rSW66cWW4wIiX8Rxprt900VpDH8PFg');
 
 //get all orders for specific user
 router.get('/', authenticateToken, async (req, res) => {
@@ -72,10 +72,16 @@ router.post('/create-order', authenticateToken, async (req, res) => {
         // }
 
         const savedOrder = await newOrder.save();
+
+        const notification = new Notification({
+            userId: savedOrder.userId,
+            message: `Your order with Order#${savedOrder._id} has been placed successfully!`
+        });
+        await notification.save();
+
         cart.items = [];
         cart.cartTotal = 0;
         await cart.save();
-
         res.status(201).json({ message: "Order placed successfully", savedOrder });
     }
     catch(error) {
@@ -111,6 +117,12 @@ router.put('/update-order/:id', authenticateToken, authorizeAdmin, async (req, r
             return res.status(404).json({ message: 'Order not found.' });
         }
 
+        const notification = new Notification({
+            userId: order.userId,
+            message: `Your order with Order#${order._id} has been updated to ${status}`
+        });
+
+        await notification.save();
         res.status(200).json({ message: 'Order updated successfully.' });
     }
     catch(error) {
