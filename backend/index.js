@@ -8,6 +8,7 @@ import CategoryRoutes from './routes/CategoryRoutes.js';
 import CartRoutes from './routes/CartRoutes.js';
 import OrderRoutes from './routes/OrderRoutes.js';
 import SupportTicketRoutes from './routes/SupportTicketRoutes.js';
+import NotificationRoutes from './routes/NotificationRoutes.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/categories', CategoryRoutes);
 app.use('/cart', CartRoutes);
 app.use('/orders', OrderRoutes);
 app.use('/support', SupportTicketRoutes);
+app.use('/notifications', NotificationRoutes);
 
 //landing page
 app.get('/', (req, res) => {

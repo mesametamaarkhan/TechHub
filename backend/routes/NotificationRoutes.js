@@ -20,7 +20,7 @@ router.get('/', authenticateToken, async (req, res) => {
 router.put('/:id/read', authenticateToken, async (req, res) => {
     try {
         const _id = req.params.id;
-        const notification = await Notification.findByIdAndUpdate({ _id }, { read: true });
+        const notification = await Notification.findByIdAndUpdate({ _id }, { isRead: true });
         if(!notification) {
             return res.status(404).json({ message: "Notification not found" });
         }
