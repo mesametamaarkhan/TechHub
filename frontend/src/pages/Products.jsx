@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Star, StarHalf } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { useInView } from 'react-intersection-observer';
+import axios from 'axios';
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [products, setProducts] = useState([]); // Store all products
+  const [currentProducts, setCurrentProducts] = useState([]); // Store products to display based on current page
+  const [loading, setLoading] = useState(true); // Loading state while fetching data
+  const [page, setPage] = useState(1); // Current page for pagination
+  const [productsPerPage] = useState(6); // Number of products per page
+  const [hasMore, setHasMore] = useState(true); // Track if there are more products to load
+
+  // Filters (kept in the state but not used)
   const [filters, setFilters] = useState({
     category: '',
     priceRange: [0, 5000],
@@ -18,63 +23,73 @@ const Products = () => {
     threshold: 0
   });
 
-  // Simulated product data
-  const generateProducts = (pageNum) => {
-    const brands = ['Dell', 'HP', 'Apple', 'Samsung', 'Lenovo'];
-    const categories = ['Laptops', 'Phones', 'Accessories'];
-    const newProducts = [];
-    
-    for (let i = (pageNum - 1) * 12; i < pageNum * 12; i++) {
-      newProducts.push({
-        id: i + 1,
-        name: `${brands[i % brands.length]} ${categories[i % categories.length]} ${i + 1}`,
-        price: Math.floor(Math.random() * 2000) + 500,
-        image: `https://images.unsplash.com/photo-${1610945265064 + i}`,
-        category: categories[i % categories.length],
-        brand: brands[i % brands.length],
-        rating: (Math.floor(Math.random() * 10) + 35) / 10
-      });
-    }
-    
-    return newProducts;
-  };
-
   useEffect(() => {
-    if (inView) {
-      loadMore();
+    // Fetch all products when the page first loads
+    const fetchProducts = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+          console.error('No access token found!');
+          return;
+        }
+
+        // Fetch all products from the backend API
+        const response = await axios.get('http://localhost:8080/products/', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const allProducts = response.data.products;
+        setProducts(allProducts);
+        setCurrentProducts(allProducts.slice(0, productsPerPage)); // Display products for the first page
+        setLoading(false);
+
+        // If the total number of products is less than the products per page, disable further loading
+        if (allProducts.length <= productsPerPage) {
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Update products to display based on the current page
+  const paginateProducts = (pageNumber) => {
+    if (!hasMore) return; // Prevent pagination if no more products
+
+    setPage(pageNumber);
+    const startIndex = (pageNumber - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const displayedProducts = products.slice(startIndex, endIndex);
+
+    setCurrentProducts(displayedProducts); // Display products for the current page
+
+    // Log the current products being displayed
+    console.log('Current products on page ' + pageNumber + ':', displayedProducts);
+
+    // If there are no more products left to display, set hasMore to false
+    if (endIndex >= products.length) {
+      setHasMore(false);
     }
-  }, [inView]);
-
-  const loadMore = () => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      const newProducts = generateProducts(page);
-      setProducts(prev => [...prev, ...newProducts]);
-      setPage(prev => prev + 1);
-      setLoading(false);
-    }, 1000);
   };
 
-  const handleFilterChange = (type, value) => {
-    setFilters(prev => ({ ...prev, [type]: value }));
-    setProducts([]);
-    setPage(1);
-  };
-
-  const filteredProducts = products.filter(product => {
-    return (
-      (!filters.category || product.category === filters.category) &&
-      (!filters.brand || product.brand === filters.brand) &&
-      (product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1]) &&
-      (!filters.rating || product.rating >= filters.rating)
-    );
-  });
+  // Handle the page change when inView is triggered
+  useEffect(() => {
+    if (inView && hasMore && currentProducts.length > 0) {
+      paginateProducts(page + 1); // Increment page number when scrolled to the bottom
+    }
+  }, [inView, page, hasMore]);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Filters Sidebar */}
+        {/* Filters Sidebar (Unused but kept for future use) */}
         <div className="w-full md:w-64 bg-white p-6 rounded-lg shadow-md h-fit">
           <h2 className="text-xl font-bold mb-6">Filters</h2>
           
@@ -89,7 +104,7 @@ const Products = () => {
                     name="category"
                     value={category}
                     checked={filters.category === category}
-                    onChange={(e) => handleFilterChange('category', e.target.value)}
+                    onChange={() => {}} // Empty onChange handler to avoid warning
                     className="mr-2"
                   />
                   {category}
@@ -106,7 +121,7 @@ const Products = () => {
               min="0"
               max="5000"
               value={filters.priceRange[1]}
-              onChange={(e) => handleFilterChange('priceRange', [0, parseInt(e.target.value)])}
+              onChange={() => {}} // Empty onChange handler to avoid warning
               className="w-full"
             />
             <div className="flex justify-between text-sm text-gray-600">
@@ -126,7 +141,7 @@ const Products = () => {
                     name="brand"
                     value={brand}
                     checked={filters.brand === brand}
-                    onChange={(e) => handleFilterChange('brand', e.target.value)}
+                    onChange={() => {}} // Empty onChange handler to avoid warning
                     className="mr-2"
                   />
                   {brand}
@@ -146,12 +161,14 @@ const Products = () => {
                     name="rating"
                     value={rating}
                     checked={filters.rating === rating}
-                    onChange={(e) => handleFilterChange('rating', parseInt(e.target.value))}
+                    onChange={() => {}} // Empty onChange handler to avoid warning
                     className="mr-2"
                   />
                   <div className="flex items-center">
                     {Array(rating).fill().map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                      <svg key={i} className="w-4 h-4 text-yellow-400 fill-current">
+                        <path d="M10 15l-3 3.3L4 15l-.6-4.6L1 7l4.6-.4L5 2l2.6 4L14 6l-3.4 2.4L10 15z" />
+                      </svg>
                     ))}
                     <span className="ml-1">& up</span>
                   </div>
@@ -163,9 +180,13 @@ const Products = () => {
 
         {/* Products Grid */}
         <div className="flex-1">
+          <div className="text-xl font-semibold mb-6">
+            {/* Display number of products */}
+            <p>Displaying {currentProducts.length} product{currentProducts.length !== 1 ? 's' : ''}</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map(product => (
-              <ProductCard key={product.id} {...product} />
+            {currentProducts.map(product => (
+              <ProductCard key={product._id} {...product} />
             ))}
           </div>
           
@@ -179,6 +200,6 @@ const Products = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Products;
