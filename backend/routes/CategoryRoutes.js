@@ -19,15 +19,16 @@ router.get('/', authenticateToken, async (req, res) => {
 //Admin Only Routes
 //add a new category
 router.post('/add-category', authenticateToken, authorizeAdmin, async (req, res) => {
-    if(!req.body.title || !req.body.description) {
+    if(!req.body.title || !req.body.description || !req.body.image) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
 
     try {
-        const { title, description } = req.body;
+        const { title, description, image } = req.body;
         const newCategory = new Category({
             title,
-            description
+            description,
+            image
         });
         
         await newCategory.save();

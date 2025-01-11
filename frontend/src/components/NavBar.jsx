@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Navbar = () => {
+  // Mocking user authentication state
+  const [user, setUser] = useState(null);
+
+  // Simulate fetching user data (replace with actual logic)
+  useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem('user')); // Assume user is stored in localStorage
+    if (loggedInUser) {
+      setUser(loggedInUser);
+    }
+  }, []);
+
+  const navigate = useNavigate(); // Create the navigate function
+
+  // Handler for navigating to the account page
+  const handleUserClick = () => {
+    navigate('/account'); // Navigate to the account page
+  };
+
+  // Handler for navigating to the cart page
+  const handleCartClick = () => {
+    navigate('/cart'); // Navigate to the cart page
+  };
+
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4">
@@ -17,11 +41,18 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="flex items-center text-gray-700 hover:text-blue-900">
-              <User className="h-6 w-6" />
-              <span className="ml-2 hidden md:inline">Login</span>
-            </button>
-            <button className="flex items-center text-gray-700 hover:text-blue-900 relative">
+            {user ? (
+              <button onClick={handleUserClick} className="flex items-center text-gray-700 hover:text-blue-900">
+                <User className="h-6 w-6" />
+                <span className="ml-2 hidden md:inline">{user.name}</span>
+              </button>
+            ) : (
+              <button onClick={handleUserClick} className="flex items-center text-gray-700 hover:text-blue-900">
+                <User className="h-6 w-6" />
+                <span className="ml-2 hidden md:inline">Login</span>
+              </button>
+            )}
+            <button onClick={handleCartClick} className="flex items-center text-gray-700 hover:text-blue-900 relative">
               <ShoppingCart className="h-6 w-6" />
               <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
             </button>

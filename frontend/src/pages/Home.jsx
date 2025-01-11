@@ -1,64 +1,91 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate for redirection
+import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 
 const Home = () => {
-  const products = [
-    {
-      id: 1,
-      name: "iPhone 15 Pro",
-      price: 999,
-      image: "https://images.unsplash.com/photo-1696423736792-2d5be7ce4f7d",
-      category: "Phones",
-      rating: 4.8
-    },
-    {
-      id: 2,
-      name: "MacBook Pro M3",
-      price: 1499,
-      image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-      category: "Laptops",
-      rating: 4.9
-    },
-    {
-      id: 3,
-      name: "AirPods Pro",
-      price: 249,
-      image: "https://images.unsplash.com/photo-1588156979435-379b9d365296",
-      category: "Accessories",
-      rating: 4.7
-    },
-    {
-      id: 4,
-      name: "Samsung Galaxy S24",
-      price: 899,
-      image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf",
-      category: "Phones",
-      rating: 4.6
-    }
-  ];
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if user is logged in
+  const navigate = useNavigate(); // Hook for navigation
 
-  const categories = [
-    {
-      id: 1,
-      name: "Smartphones",
-      image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
-      count: "50+ Products"
-    },
-    {
-      id: 2,
-      name: "Laptops",
-      image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
-      count: "30+ Products"
-    },
-    {
-      id: 3,
-      name: "Accessories",
-      image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb",
-      count: "100+ Products"
+  useEffect(() => {
+    // Check if the user is logged in before fetching data
+    const checkLoginStatus = () => {
+      const loginStatus = localStorage.getItem('isLoggedIn');
+      if (loginStatus === 'true') {
+        setIsLoggedIn(true); // User is logged in
+      } else {
+        setIsLoggedIn(false); // User is not logged in
+        navigate('/login'); // Redirect to login page
+      }
+    };
+
+    checkLoginStatus();
+
+    if (isLoggedIn) {
+      const fetchData = async () => {
+        try {
+          const accessToken = localStorage.getItem('accessToken');
+          
+          if (!accessToken) {
+            console.error('No access token found!');
+            return;
+          }
+
+          // Make the request with the Authorization header
+          const productResponse = await axios.get('http://localhost:8080/products/', {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            }
+          });
+
+          const categoryResponse = await axios.get('http://localhost:8080/categories/', {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            }
+          });
+
+          // Check if any of the responses has a status 403 (Forbidden - Invalid Token)
+          if (productResponse.status === 403 || categoryResponse.status === 403) {
+            console.error('Invalid token, redirecting to login...');
+            localStorage.removeItem('accessToken'); // Remove the invalid token
+            localStorage.removeItem('isLoggedIn'); // Optional: Remove login status as well
+            setIsLoggedIn(false);
+            navigate('/login'); // Redirect to the login page
+            return;
+          }
+
+          // If no error, set the data to state
+          setProducts(productResponse.data.products);
+          setCategories(categoryResponse.data.categories);
+          setLoading(false);
+        } catch (error) {
+          // Handle error gracefully
+          if (error.response && error.response.status === 403) {
+            console.error('Access forbidden. Invalid token, redirecting to login...');
+            localStorage.removeItem('accessToken'); // Remove the invalid token
+            localStorage.removeItem('isLoggedIn'); // Optional: Remove login status as well
+            setIsLoggedIn(false);
+            navigate('/login'); // Redirect to the login page
+          } else {
+            console.error('Error fetching data:', error);
+          }
+          setLoading(false);
+        }
+      };
+
+      fetchData();
     }
-  ];
+  }, [isLoggedIn, navigate]); // Re-run the effect when isLoggedIn changes
+
+  if (loading) {
+    return <p className="text-center py-16">Loading...</p>;
+  }
 
   return (
     <main>
@@ -81,7 +108,7 @@ const Home = () => {
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Featured Categories</h2>
         <div className="grid justify-center grid-cols-1 md:grid-cols-3 gap-8">
           {categories.map(category => (
-            <CategoryCard key={category.id} {...category} />
+            <CategoryCard key={category._id} {...category} />
           ))}
         </div>
       </section>
@@ -93,7 +120,7 @@ const Home = () => {
           <div className="relative">
             <div className="flex justify-center space-x-6 overflow-x-auto pb-4">
               {products.map(product => (
-                <ProductCard key={product.id} {...product} />
+                <ProductCard key={product._id} {...product} />
               ))}
             </div>
           </div>
@@ -101,6 +128,6 @@ const Home = () => {
       </section>
     </main>
   );
-}
+};
 
 export default Home;
