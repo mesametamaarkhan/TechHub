@@ -1,28 +1,22 @@
-import React from 'react';
+import React from 'react'
+import { Star } from 'lucide-react'
 
-const ProductCard = ({ title, price, images}) => {
-  return (
-    <div className="flex-none w-72">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="h-48 overflow-hidden">
-          <img 
-            src={images[0]} 
-            alt={title}
-            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
-          />
+const ProductCard = ({ product }) => {
+    return (
+        <div className='bg-white text-black shadow-md rounded-lg p-4'>
+            <img src={product.image} alt='Product' className='w-full h-48 object-cover' />
+            <h2 className='text-xl font-semibold mt-4'>{product.name}</h2>
+            <h3 className='text-lg font-medium mt-2'>{product.description}</h3>
+            <div className='flex items-center'>
+                <Star className='h-5 w-5 text-yellow-500 fill-current' />
+                <span className='ml-2'>{product.rating}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+                <span className='text-lg font-semibold'>{product.price}</span>
+                <button className='bg-black text-white px-4 py-2 rounded-md'>Add to Cart</button>
+            </div>
         </div>
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mt-1">{title}</h3>
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-xl font-bold text-gray-900">${price}</span>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors">
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+    )
+}
 
 export default ProductCard;

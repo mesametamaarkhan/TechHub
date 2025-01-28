@@ -1,66 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React from 'react';
+import { FiShoppingCart, FiHeart, FiUser, FiSearch } from 'react-icons/fi';
 
 const Navbar = () => {
-  // Mocking user authentication state
-  const [user, setUser] = useState(null);
-
-  // Simulate fetching user data (replace with actual logic)
-  useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem('user')); // Assume user is stored in localStorage
-    if (loggedInUser) {
-      setUser(loggedInUser);
-    }
-  }, []);
-
-  const navigate = useNavigate(); // Create the navigate function
-
-  // Handler for navigating to the account page
-  const handleUserClick = () => {
-    navigate('/account'); // Navigate to the account page
-  };
-
-  // Handler for navigating to the cart page
-  const handleCartClick = () => {
-    navigate('/cart'); // Navigate to the cart page
-  };
-
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <a href="/" className="text-2xl font-bold text-blue-900">TechHub</a>
-            <div className="hidden md:block ml-10">
-              <div className="flex items-center space-x-4">
-                <a href="/" className="text-gray-700 hover:text-blue-900">Home</a>
-                <a href="/products" className="text-gray-700 hover:text-blue-900">Products</a>
-                <a href="#" className="text-gray-700 hover:text-blue-900">Categories</a>
-              </div>
+    <header className="bg-white shadow-md">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <div className="text-2xl font-bold text-black">
+            <a href="/" className="text-black">TechMart</a>
+          </div>
+
+          {/* Navigation */}
+          <nav className="hidden md:flex space-x-6">
+            <a href="/" className="text-black">Home</a>
+            <a href="/shop" className="text-black">Shop</a>
+            <a href="/about-us" className="text-black">About Us</a>
+            <a href="/contact" className="text-black">Contact</a>
+          </nav>
+
+          {/* Search Bar */}
+          <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full px-4 py-2 border text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              />
+              <FiSearch className="absolute right-3 top-3 text-black" />
             </div>
           </div>
+
+          {/* User Menu */}
           <div className="flex items-center space-x-4">
-            {user ? (
-              <button onClick={handleUserClick} className="flex items-center text-gray-700 hover:text-blue-900">
-                <User className="h-6 w-6" />
-                <span className="ml-2 hidden md:inline">{user.name}</span>
-              </button>
-            ) : (
-              <button onClick={handleUserClick} className="flex items-center text-gray-700 hover:text-blue-900">
-                <User className="h-6 w-6" />
-                <span className="ml-2 hidden md:inline">Login</span>
-              </button>
-            )}
-            <button onClick={handleCartClick} className="flex items-center text-gray-700 hover:text-blue-900 relative">
-              <ShoppingCart className="h-6 w-6" />
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+            <button 
+              className="p-2 text-black"
+              onClick={() => alert('Cart clicked!')}
+              >
+              <FiShoppingCart size={20} />
+            </button>
+            <button 
+              className="p-2 text-black"
+              onClick={() => alert('Wishlist clicked!')}
+              >
+              <FiHeart size={20} />
+            </button>
+            <button 
+              className="p-2 text-black"
+              onClick={() => alert('User clicked!')}
+              >
+              <FiUser size={20} />
             </button>
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
-};
+}
 
 export default Navbar;
