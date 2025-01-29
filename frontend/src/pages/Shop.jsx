@@ -9,11 +9,17 @@ const Shop = () => {
     rating: 0,
   });
 
-  const currentProducts = [
-    { name: 'Product 1', description: 'Product 1 description', rating: 4.5, price: 499.99, brand: 'Samsung', image: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-4.0.3' },
-    { name: 'Product 2', description: 'Product 2 description', rating: 3.5, price: 299.99, brand: 'Apple', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3' },
-    { name: 'Product 3', description: 'Product 3 description', rating: 5, price: 699.99, brand: 'Dell', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3' },
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 15;
+
+  const currentProducts = Array.from({ length: 50 }, (_, index) => ({
+    name: `Product ${index + 1}`,
+    description: `Description for product ${index + 1}`,
+    rating: (Math.random() * 5).toFixed(1),
+    price: (Math.random() * 2000 + 100).toFixed(2),
+    brand: ['Samsung', 'Apple', 'Dell', 'HP', 'Lenovo'][Math.floor(Math.random() * 5)],
+    image: 'https://via.placeholder.com/150',
+  }));
 
   const categories = ['All', 'Laptops', 'Phones', 'Accessories'];
   const brands = ['All', 'Dell', 'HP', 'Apple', 'Samsung', 'Lenovo'];
@@ -23,6 +29,7 @@ const Shop = () => {
         ...prevFilters,
         category: category === 'All' ? '' : category,
     }));
+    setCurrentPage(1);
   };
 
   const handlePriceRangeChange = (value) => {
@@ -30,6 +37,7 @@ const Shop = () => {
         ...prevFilters,
         priceRange: [0, parseInt(value)],
     }));
+    setCurrentPage(1);
   };
 
   const handleBrandChange = (brand) => {
@@ -37,6 +45,7 @@ const Shop = () => {
         ...prevFilters,
         brand: brand === 'All' ? '' : brand,
     }));
+    setCurrentPage(1);
   };
 
     const filteredProducts = currentProducts.filter(product => {
@@ -46,6 +55,12 @@ const Shop = () => {
 
         return categoryMatch && priceMatch && brandMatch;
     });
+
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    const displayedProducts = filteredProducts.slice(
+        (currentPage - 1) * productsPerPage,
+        currentPage * productsPerPage
+    );
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -116,12 +131,40 @@ const Shop = () => {
                 <div className='flex-1'>
                     <div className='text-xl font-semibold mb-6 text-black'>
                         {/* Display number of products */}
-                        <p>Displaying {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}</p>
+                        <p>Displaying {displayedProducts.length} product{displayedProducts.length !== 1 ? 's' : ''}</p>
                     </div>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                        {filteredProducts.map((product, index) => (
+                        {displayedProducts.map((product, index) => (
                             <ProductCard key={index} product={product} />
                         ))}
+                    </div>
+                    <div className='flex items-center justify-between rounded-lg bg-white px-4 py-3 mt-4 sm:px-6'>
+                        <div className='flex flex-1 justify-between'>
+                            <button
+                                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                className={`relative inline-flex items-center rounded-md border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 ${
+                                    currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                                }`}
+                            >
+                                Previous
+                            </button>
+                            <div className="items-center mt-2">
+                                <p className="text-md text-gray-700">
+                                    Showing Page <span className="font-medium">{currentPage}</span> of{' '}
+                                    <span className="font-medium">{totalPages}</span>
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className={`relative inline-flex items-center rounded-md border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 ${
+                                    currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+                                }`}
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
