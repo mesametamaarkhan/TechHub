@@ -21,12 +21,12 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-dark-greenish-gray">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8 text-black">What Our Customers Say</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-white">What Our Customers Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-md">
+            <div key={testimonial.id} className="bg-black p-6 rounded-lg shadow-md">
               <div className="flex items-center mb-4">
                 <img
                   src={testimonial.image}
@@ -34,7 +34,7 @@ const Testimonials = () => {
                   className="w-12 h-12 rounded-full mr-4"
                 />
                 <div>
-                  <h3 className="font-semibold text-black">{testimonial.name}</h3>
+                  <h3 className="font-semibold text-white">{testimonial.name}</h3>
                   <div className="flex">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <FiStar key={i} className="text-yellow-400 fill-current" />
@@ -42,7 +42,7 @@ const Testimonials = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600">{testimonial.comment}</p>
+              <p className="text-white">{testimonial.comment}</p>
             </div>
           ))}
         </div>

@@ -6,10 +6,22 @@ import { Product } from '../models/ProductModel.js';
 const router = express.Router();
 
 //get all products
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', /*authenticateToken,*/ async (req, res) => {
     try {
-        const products = await Product.find();
-        return res.status(200).json({ products: products });
+        const products = await Product.aggregate([
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    categoryId: 1,
+                    shortDescription: 1,
+                    price: 1,
+                    firstImage: { $arrayElemAt: ["$images", 0] }
+                }
+            }
+        ]);
+        
+        return res.status(200).json({ products });
     }
     catch(error) {
         res.status(500).json({ message: "Server error" });
@@ -21,7 +33,27 @@ router.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
-        return res.status(200).json({ product });
+
+        const recommendedProducts = await Product.aggregate([
+            {
+                $match: { 
+                    category: product.category, 
+                    _id: { $ne: product._id } // Exclude the current product
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    shortDescription: 1,
+                    price: 1,
+                    firstImage: { $arrayElemAt: ["$images", 0] } // Get the first image from array
+                }
+            },
+            { $limit: 3 } // Limit to top 3 recommendations
+        ]);
+
+        return res.status(200).json({ product, recommendedProducts });
     }
     catch(error) {
         res.status(500).json({ message: "Server error" , error});
@@ -61,22 +93,25 @@ router.put('/rate-product/:id', async (req, res) => {
 
 //Admin Only Routes
 //add a product
-router.post('/add-product', authenticateToken, authorizeAdmin, async (req, res) => {
-    if(!req.body.title || !req.body.description || !req.body.price || !req.body.stock
-        || !req.body.categoryId
+router.post('/add-product', /*authenticateToken, authorizeAdmin,*/ async (req, res) => {
+    if(!req.body.title || !req.body.shortDescription || !req.body.fullDescription || !req.body.price 
+        || !req.body.stock || !req.body.categoryId || !req.body.features || !req.body.specs
     ) {
-        return res.status(400).send({ message: 'Some required fields are missing!!'});
+        console.log(req.body);
+        return res.status(400).send({ message: 'Some required fields are missing!!', });
     }
 
     try {
-        const { title, description, price, stock, categoryId, images, specs } = req.body;
+        const { title, shortDescription, fullDescription, price, stock, categoryId, images, features, specs } = req.body;
         const newProduct = new Product({
             title,
-            description,
+            shortDescription,
+            fullDescription,
             price,
             stock,
             categoryId, 
             images,
+            features,
             specs
         });
         

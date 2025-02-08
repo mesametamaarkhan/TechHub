@@ -20,10 +20,10 @@ const Hero = () => {
                 Discover amazing deals on the latest electronics and gadgets
               </p>
               <div className="space-x-4">
-                <button className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
                   Shop Now
                 </button>
-                <button className="bg-gray-800 text-gray-100 px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                <button className="bg-green-800 text-gray-100 px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
                   Explore Deals
                 </button>
               </div>

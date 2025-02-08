@@ -6,7 +6,12 @@ const productSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    description: {
+    shortDescription: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    fullDescription: {
         type: String,
         required: true,
         trim: true
@@ -22,30 +27,33 @@ const productSchema = mongoose.Schema({
         min: 0
     },
     categoryId: {
-        type: mongoose.Schema.Types.ObjectId, // Referencing another document
-        ref: 'categories', // Assuming there's a Category model
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'categories', 
         required: true
     },
     images: {
-        type: [String], // Array of URLs as strings
+        type: [String], 
+    },
+    features: {
+        type: [String],
     },
     specs: {
         type: Map,
-        of: String, // Key-value pairs where values are strings
+        of: String, 
         required: true
     },
-    rating: {
+    reviews: {
         type: [{
             userId: {
-                type: mongoose.Schema.Types.ObjectId, // Referencing another document
-                ref: 'users', // Assuming there's a User model
+                type: mongoose.Schema.Types.ObjectId, 
+                ref: 'users', 
                 required: true
             },
             rating: {
                 type: Number,
                 required: true,
                 min: 1,
-                max: 5 // Ratings between 1 and 5
+                max: 5 
             }
         }],
         default: []

@@ -1,12 +1,10 @@
 import express from 'express';
-import authenticateToken from '../middleware/AuthenticateToken.js';
 import { Order } from '../models/OrderModel.js';
 import { Cart } from '../models/CartModel.js';
+import authenticateToken from '../middleware/AuthenticateToken.js';
 import authorizeAdmin from '../middleware/AuthorizeAdmin.js';
-import Stripe from 'stripe';
 
 const router = express.Router();
-// const stripe = new Stripe('sk_test_51QffY8KL1GLslAWPkh4ugqLuuDGAFtRrX1GkZDFPYrOkdYfthnzkuEuH4UVBlPJJJL74rSW66cWW4wIiX8Rxprt900VpDH8PFg');
 
 //get all orders for specific user
 router.get('/', authenticateToken, async (req, res) => {
@@ -61,7 +59,7 @@ router.post('/create-order', authenticateToken, async (req, res) => {
         //         metadata: { orderId: savedOrder._id.toString() }
         //     });
         //     paymentResult = paymentIntent;
-
+        //
         //     savedOrder.status = 'Paid';
         //     savedOrder.transactionId = paymentIntent.id; // <-- Store the transaction ID
         //     savedOrder.status = 'Paid';

@@ -6,10 +6,17 @@ import { Category } from '../models/CategoryModel.js';
 const router = express.Router();
 
 //get all categories
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', /*authenticateToken,*/ async (req, res) => {
     try {
-        const categories = await Category.find();
-        return res.status(200).json({ categories: categories });
+        const categories = await Category.aggregate([
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                }
+            }
+        ]);
+        return res.status(200).json({ categories });
     }
     catch(error) {
         res.status(500).json({ message: "Server error" });

@@ -13,18 +13,18 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white">About Us</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Contact</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-green-600">About Us</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-green-600">Terms of Service</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-green-600">Privacy Policy</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-green-600">Contact</a></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold mb-4">Follow Us</h4>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-gray-600"><FiFacebook size={24} /></a>
-              <a href="#" className="hover:text-gray-600"><FiTwitter size={24} /></a>
-              <a href="#" className="hover:text-gray-600"><FiInstagram size={24} /></a>
+              <a href="#" className="hover:text-green-600"><FiFacebook size={24} /></a>
+              <a href="#" className="hover:text-green-600"><FiTwitter size={24} /></a>
+              <a href="#" className="hover:text-green-600"><FiInstagram size={24} /></a>
             </div>
           </div>
           <div>
@@ -35,7 +35,7 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 rounded bg-white text-black"
               />
-              <button className="w-full bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+              <button className="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                 Subscribe
               </button>
             </form>

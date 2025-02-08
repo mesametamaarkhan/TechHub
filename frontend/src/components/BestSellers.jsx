@@ -1,5 +1,6 @@
 import React from 'react';
 import ProductCard from './ProductCard';
+import { motion } from 'framer-motion';
 
 const products = [
   {
@@ -21,16 +22,21 @@ const products = [
 
 const BestSellers = () => {
   return (
-    <section className="py-12">
+    <section className="py-12 bg-dark-greenish-gray">
       <div className="container mx-auto px-4 justify-center items-center">
-        <h2 className="text-3xl font-bold text-center mb-8 text-black">Best Sellers</h2>
-        <div className="flex overflow-x-auto gap-6 pb-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <h2 className="text-3xl font-bold text-center mb-8 text-white">Best Sellers</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product, index) => (
+                <motion.div
+                    key={index}
+                    className="bg-black rounded-lg overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
+                >
+                    <ProductCard key={index} product={product} />
+                </motion.div>
+            ))}
         </div>
         <div className="text-center mt-8">
-          <button className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+          <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
             Shop Now
           </button>
         </div>

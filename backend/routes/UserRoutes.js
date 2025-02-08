@@ -90,7 +90,7 @@ router.post('/login', async (req, res) => {
         const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '2d'});
         existingUser.refreshToken = refreshToken;
         await existingUser.save();
-        res.status(200).json({ message: 'Login Successful', accessToken, refreshToken, user: { name: existingUser.name, email: existingUser.email, role: existingUser.role } });
+        res.status(200).json({ message: 'Login Successful', accessToken, refreshToken, user: { id: existingUser._id, name: existingUser.name, email: existingUser.email, role: existingUser.role } });
     }
     catch(error) {
         res.status(500).json({ message: 'Server error', error});

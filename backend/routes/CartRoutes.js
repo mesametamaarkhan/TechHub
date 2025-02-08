@@ -5,15 +5,21 @@ import { Cart } from '../models/CartModel.js';
 const router = express.Router();
 
 //get a cart
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/:id', /*authenticateToken,*/ async (req, res) => {
     try {
-        const { userId } = req.body;
-        const cart = await Cart.findOne({ userId });
+        const { id } = req.params;
+        
+        const cart = await Cart.findOne({ userId: id });
 
         if(!cart) {
-            return res.status(404).json({ message: 'Cart does not exist.'});
+            cart = new Cart({
+                userId,
+                items: [],
+                cartTotal: 0
+            });
         }
 
+        console.log(cart);
         return res.status(200).json({ cart });
     }
     catch(error) {
@@ -23,12 +29,13 @@ router.get('/', authenticateToken, async (req, res) => {
 
 //add items to cart
 router.put('/add-to-cart', authenticateToken, async (req, res) => {
-    if(!req.body.userId || !req.body.productId || !req.body.quantity || !req.body.price) {
+    if(!req.body.userId || !req.body.productId || !req.body.quantity || !req.body.price || !req.body.productTitle || !req.body.productImage) {
+        console.log(req.body);
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
 
     try {
-        const { userId, productId, quantity, price } = req.body;
+        const { userId, productId, quantity, price, productTitle, productImage } = req.body;
         let cart = await Cart.findOne({ userId });
         if(!cart) {
             cart = new Cart({
@@ -48,7 +55,7 @@ router.put('/add-to-cart', authenticateToken, async (req, res) => {
             cart.items[existingItemIndex].price = price;
         }
         else {
-            cart.items.push({ productId, quantity, price });
+            cart.items.push({ productId, quantity, price, productTitle, productImage });
         }
 
         //Recalculate cart total
@@ -61,7 +68,46 @@ router.put('/add-to-cart', authenticateToken, async (req, res) => {
         res.status(200).json({ message: 'Item added to cart successfully.', cart });
     }
     catch(error) {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+
+//route to update cart product quantity
+router.put('/update-quantity/:id', /*authenticateToken,*/ async (req, res) => {
+    if(!req.body.userId) {
+        console.log(req.body);
+        return res.status(404).json({ message: 'Some required fields are missing' });
+    }
+
+    try {
+        const { id } = req.params;
+        const { userId, add } = req.body;
+
+        let cart = await Cart.findOne({ userId });
+        if(!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
+
+        const itemIndex = cart.items.findIndex(
+            item => item.productId.toString() === id
+        );
+
+        if(itemIndex === -1) {
+            return res.status(404).json({ message: "Product not found in cart!"});
+        }
+
+        if(add === 1) {
+            cart.items[itemIndex].quantity += 1;
+        }
+        else if(add === 0) {
+            cart.items[itemIndex].quantity -= 1;
+        }
+
+        await cart.save();
+        res.status(200).json({ message: 'Quantity updated successfully' });
+    }
+    catch(error) {
+        res.status(500).json({ message: 'Server error', error });
     }
 });
 
@@ -99,7 +145,7 @@ router.put('/delete-item/:id', authenticateToken, async (req, res) => {
         return res.status(200).json({ message: "Item removed from cart successfully!", cart });
     }
     catch(error) {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error", error });
     }
 }); 
 

@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        'dark-greenish-gray': '#111b14'
+      }
     },
   },
   plugins: [],

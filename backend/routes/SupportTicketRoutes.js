@@ -1,6 +1,6 @@
 import express from 'express';
-import authenticateToken from '../middleware/AuthenticateToken.js';
 import { SupportTicket } from '../models/SupportTicketModel.js';
+import authenticateToken from '../middleware/AuthenticateToken.js';
 import authorizeAdmin from '../middleware/AuthorizeAdmin.js';
 
 const router = express.Router();
