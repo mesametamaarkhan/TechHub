@@ -97,7 +97,6 @@ router.post('/add-product', /*authenticateToken, authorizeAdmin,*/ async (req, r
     if(!req.body.title || !req.body.shortDescription || !req.body.fullDescription || !req.body.price 
         || !req.body.stock || !req.body.categoryId || !req.body.features || !req.body.specs
     ) {
-        console.log(req.body);
         return res.status(400).send({ message: 'Some required fields are missing!!', });
     }
 

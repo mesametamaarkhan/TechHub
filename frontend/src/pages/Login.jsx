@@ -18,7 +18,6 @@ const LoginPage = () => {
     setErrorMessage('');
 
     try {
-      console.log(formData);
       const response = await axios.post('http://localhost:8080/user/login', formData, {
         headers: { 'Content-Type': 'application/json' }
       });

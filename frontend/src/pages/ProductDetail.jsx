@@ -30,7 +30,7 @@ const ProductDetail = () => {
         try {
             const token = localStorage.getItem('accessToken');
             const user = JSON.parse(localStorage.getItem('user'));
-            console.log(user);
+            
             const res = await axios.put(`http://localhost:8080/cart/add-to-cart`, 
                 {
                     userId: user.id,

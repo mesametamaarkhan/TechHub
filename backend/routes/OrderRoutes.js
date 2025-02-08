@@ -21,25 +21,25 @@ router.get('/', authenticateToken, async (req, res) => {
 //create order
 //need to look at this again
 //this is working without the payment method stuff
-router.post('/create-order', authenticateToken, async (req, res) => {
-    if(!req.body.shippingAddress || !req.body.paymentMethod || !req.body.tax ) {
+router.post('/create-order', /*authenticateToken,*/ async (req, res) => {
+    if(!req.body.shippingAddress || !req.body.paymentMethod || !req.body.tax || !req.body.userId ) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
 
     try {
-        const id  = req.user.id;
-        const { shippingAddress, paymentMethod, tax, tokenId } = req.body;
+        const { userId, shippingAddress, paymentMethod, tax } = req.body;
 
-        const cart = await Cart.findOne({ userId: id });
+        const cart = await Cart.findOne({ userId });
         if(!cart || cart.items.length === 0) {
             return res.status(400).json({ message: "Cart is empty. Add items before placing an order." });
         }
 
+
         const subtotal = cart.cartTotal;
-        const totalAmount = subtotal + tax;
+        const totalAmount = subtotal + tax + 15.99;
 
         const newOrder = new Order({
-            userId: id,
+            userId: userId,
             items: cart.items,
             shippingAddress,
             paymentMethod,
@@ -71,11 +71,11 @@ router.post('/create-order', authenticateToken, async (req, res) => {
 
         const savedOrder = await newOrder.save();
 
-        const notification = new Notification({
-            userId: savedOrder.userId,
-            message: `Your order with Order#${savedOrder._id} has been placed successfully!`
-        });
-        await notification.save();
+        // const notification = new Notification({
+        //     userId: savedOrder.userId,
+        //     message: `Your order with Order#${savedOrder._id} has been placed successfully!`
+        // });
+        // await notification.save();
 
         cart.items = [];
         cart.cartTotal = 0;
