@@ -159,7 +159,7 @@ router.post('/refresh-token', authenticateToken, async (req, res) => {
 });
 
 //route to display user's profile page
-router.get('/profile-page/:id', authenticateToken, async (req, res) => {
+router.get('/profile-page/:id', /*authenticateToken,*/ async (req, res) => {
     try {   
         const { id } = req.params;
         const user = await User.findById(id);
@@ -171,14 +171,13 @@ router.get('/profile-page/:id', authenticateToken, async (req, res) => {
 });
 
 //reset password
-router.post('/reset-password/:id', authenticateToken, async (req, res) => {
+router.post('/reset-password/:id', /*authenticateToken,*/ async (req, res) => {
     if(!req.body.password || !req.body.newPassword) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
 
     const id = req.params.id;
     const { password, newPassword } = req.body;
-    
 
     try {
         const existingUser = await User.findById(id);
@@ -207,7 +206,7 @@ router.post('/reset-password/:id', authenticateToken, async (req, res) => {
 });
 
 //update profile
-router.put('/update-profile/:id', authenticateToken, async (req,res) => {
+router.put('/update-profile/:id', /*authenticateToken,*/ async (req,res) => {
     //verify all fields have been filled
     if(!req.body.name || !req.body.email
         || !req.body.phone 
@@ -222,7 +221,7 @@ router.put('/update-profile/:id', authenticateToken, async (req,res) => {
             return res.status(404).json({ message: 'User not found.', existingUser });
         }
         
-        res.status(201).json({ message: 'User updated successfully!'});
+        res.status(201).json({ message: 'User updated successfully!' });
     }
     catch(error) {
         res.status(500).json({ message: 'Server error', error});

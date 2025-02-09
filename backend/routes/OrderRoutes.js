@@ -7,9 +7,9 @@ import authorizeAdmin from '../middleware/AuthorizeAdmin.js';
 const router = express.Router();
 
 //get all orders for specific user
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/:id', /*authenticateToken,*/ async (req, res) => {
     try {
-        const { id } = req.user;
+        const { id } = req.params;
         const orders = await Order.find({ userId: id });
         res.status(200).json({ orders });
     }
