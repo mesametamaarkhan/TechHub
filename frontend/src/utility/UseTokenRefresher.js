@@ -11,7 +11,6 @@ const useTokenRefresher = () => {
     useEffect(() => {
         if (excludedPaths.includes(location.pathname)) return;
 
-        console.log('here');
         const refreshInterval = setInterval(() => {
             refreshAccessToken(navigate);
         }, 15 * 60 * 1000); // 15 minutes
