@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignupPage = () => {
-    const navigate = useNavigate;
+    const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -29,18 +29,18 @@ const SignupPage = () => {
         setErrorMessage('');
 
         try {
-            if (formData.password !== formData.confirmPassword) {
-                setErrorMessage('Passwords do not match');
-                return;
-            }
+          if (formData.password !== formData.confirmPassword) {
+            setErrorMessage('Passwords do not match');
+            return;
+          }
             
-            const response = await axios.post('http://localhost:8080/user/register', formData, {
-                headers: { 'Content-Type': 'application/json' }
-            });
+          const response = await axios.post('http://localhost:8080/user/register', formData, {
+              headers: { 'Content-Type': 'application/json' }
+          });
 
-            if(response.status === 201) {
-                navigate('/login');
-            }
+          if(response.status === 201) {
+            navigate('/login');
+          }
         }
         catch(error) {
             console.log('Login Error', error);

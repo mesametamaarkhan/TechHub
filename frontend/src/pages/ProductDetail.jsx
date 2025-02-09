@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Plus, Star } from 'lucide-react'
 import ProductCard from '../components/ProductCard';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 
@@ -11,6 +11,7 @@ const ProductDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
     const [product, setProduct] = useState({});
     const [recommendedProducts, setRecommendedProducts] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -32,6 +33,11 @@ const ProductDetail = () => {
             const token = localStorage.getItem('accessToken');
             const user = JSON.parse(localStorage.getItem('user'));
             
+            if(!token || !user) {
+                alert('You need to login first');
+                navigate('/login');
+            }
+
             const res = await axios.put(`http://localhost:8080/cart/add-to-cart`, 
                 {
                     userId: user.id,

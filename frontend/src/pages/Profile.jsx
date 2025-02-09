@@ -81,7 +81,7 @@ const Profile = () => {
             const res = await axios.put(`http://localhost:8080/user/update-profile/${userDetails._id}`, userDetails,
                 {
                     headers: {
-                        Authentication: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );
