@@ -6,6 +6,21 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
 
+  const handleNavigate = (path) => {
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('accessToken');
+
+    if (!currentUser || !token) {
+      navigate('/login');
+    }
+    else {
+      if(path === '/profile/') {
+        path += `${JSON.parse(localStorage.getItem('user')).id}`;
+      }
+      navigate(path);
+    }
+  };
+
   return (
     <nav className="bg-black/95 backdrop-blur-sm fixed w-full z-50 border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,13 +52,13 @@ const Navbar = () => {
             {/* Icons */}
             <div className="flex items-center space-x-6">
               <button
-                onClick={() => navigate('/cart')}
+                onClick={() => handleNavigate('/cart')}
                 className="text-white hover:text-green-400 flex items-center justify-center"
               >
                 <ShoppingCart className="h-5 w-5" />
               </button>
               <button
-                onClick={() => navigate(`/profile/${JSON.parse(localStorage.getItem('user')).id}`)}
+                onClick={() => handleNavigate(`/profile/`)}
                 className="text-white hover:text-green-400 flex items-center justify-center"
               >
                 <User className="h-5 w-5" />
@@ -87,12 +102,12 @@ const Navbar = () => {
             <div className="flex space-x-4 px-3 py-2">
               <button
                 className="text-white hover:text-green-400 flex items-center justify-center"
-                onClick={() => navigate(`/cart`)}
+                onClick={() => handleNavigate(`/cart`)}
               >
                 <ShoppingCart className="h-6 w-6" />
               </button>
               <button
-                onClick={() => navigate(`/profile/${JSON.parse(localStorage.getItem('user'))._id}`)}
+                onClick={() => handleNavigate(`/profile/`)}
                 className="text-white hover:text-green-400 flex items-center justify-center"
               >
                 <User className="h-6 w-6" />

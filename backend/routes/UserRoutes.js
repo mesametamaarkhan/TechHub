@@ -10,7 +10,6 @@ import authorizeAdmin from '../middleware/AuthorizeAdmin.js';
 dotenv.config();
 const router = express.Router();
 
-
 //User Routes
 //register a new user
 router.post('/register', async (req, res) => {
@@ -59,6 +58,44 @@ router.post('/register', async (req, res) => {
     }
     catch(error) {
         res.status(500).json({ message: 'Server error', error});
+    }
+});
+
+//refresh token route
+router.post('/refresh-token', async (req, res) => {
+    const { refreshToken } = req.body;
+    if(!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token is required.'});
+    }
+
+    try {
+        const existingUser = await User.findOne({ refreshToken });
+        if(!existingUser) {
+            return res.status(403).json({ message: 'Invalid RefreshToken'});
+        }
+
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, payload) => {
+            if(error) {
+                return res.status(403).json({ message: 'Invalid or expired refresh token.' });
+            }
+
+            const newAccessToken = jwt.sign(
+                {
+                    _id: existingUser._id,
+                    role: existingUser.role,
+                    role: existingUser.role,
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                    expiresIn: '15m'
+                }
+            );
+
+            res.status(200).json({ accessToken: newAccessToken, refreshToken });
+        });
+    }
+    catch(error) {
+        res.status(500).json({ message: 'Server error', error });
     }
 });
 
@@ -159,7 +196,7 @@ router.post('/refresh-token', authenticateToken, async (req, res) => {
 });
 
 //route to display user's profile page
-router.get('/profile-page/:id', /*authenticateToken,*/ async (req, res) => {
+router.get('/profile-page/:id', authenticateToken, async (req, res) => {
     try {   
         const { id } = req.params;
         const user = await User.findById(id);
@@ -171,7 +208,7 @@ router.get('/profile-page/:id', /*authenticateToken,*/ async (req, res) => {
 });
 
 //reset password
-router.post('/reset-password/:id', /*authenticateToken,*/ async (req, res) => {
+router.post('/reset-password/:id', authenticateToken, async (req, res) => {
     if(!req.body.password || !req.body.newPassword) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
@@ -206,7 +243,7 @@ router.post('/reset-password/:id', /*authenticateToken,*/ async (req, res) => {
 });
 
 //update profile
-router.put('/update-profile/:id', /*authenticateToken,*/ async (req,res) => {
+router.put('/update-profile/:id', authenticateToken, async (req,res) => {
     //verify all fields have been filled
     if(!req.body.name || !req.body.email
         || !req.body.phone 

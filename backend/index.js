@@ -4,10 +4,8 @@ import mongoose from 'mongoose';
 import { PORT, mongoDBCon } from './config.js';
 import UserRoutes from './routes/UserRoutes.js';
 import ProductRoutes from './routes/ProductRoutes.js';
-import CategoryRoutes from './routes/CategoryRoutes.js';
 import CartRoutes from './routes/CartRoutes.js';
 import OrderRoutes from './routes/OrderRoutes.js';
-import NotificationRoutes from './routes/NotificationRoutes.js';
 
 const app = express();
 
@@ -20,10 +18,8 @@ app.use(cors());
 //other custom middleware (route handling)
 app.use('/user', UserRoutes);
 app.use('/products', ProductRoutes);
-app.use('/categories', CategoryRoutes);
 app.use('/cart', CartRoutes);
 app.use('/orders', OrderRoutes);
-app.use('/notifications', NotificationRoutes);
 
 //landing page
 app.get('/', (req, res) => {

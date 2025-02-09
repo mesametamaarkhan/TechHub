@@ -6,22 +6,10 @@ import authorizeAdmin from '../middleware/AuthorizeAdmin.js';
 
 const router = express.Router();
 
-//get all orders for specific user
-router.get('/:id', /*authenticateToken,*/ async (req, res) => {
-    try {
-        const { id } = req.params;
-        const orders = await Order.find({ userId: id });
-        res.status(200).json({ orders });
-    }
-    catch(error) {
-        res.status(500).json({ message: 'Server error', error});
-    }
-});
-
 //create order
 //need to look at this again
 //this is working without the payment method stuff
-router.post('/create-order', /*authenticateToken,*/ async (req, res) => {
+router.post('/create-order', authenticateToken, async (req, res) => {
     if(!req.body.shippingAddress || !req.body.paymentMethod || !req.body.tax || !req.body.userId ) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
@@ -128,15 +116,12 @@ router.put('/update-order/:id', authenticateToken, authorizeAdmin, async (req, r
     }
 });
 
-//get specific order
+//get all orders for specific user
 router.get('/:id', authenticateToken, async (req, res) => {
     try {
-        const orderId = req.params.id;
-        const order = await Order.find({ _id: orderId });
-        if(!order) {
-            return res.status(404).json({ message: "Order not found" });
-        }
-        res.status(200).json({ order });
+        const { id } = req.params;
+        const orders = await Order.find({ userId: id });
+        res.status(200).json({ orders });
     }
     catch(error) {
         res.status(500).json({ message: 'Server error', error});

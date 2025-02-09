@@ -23,6 +23,7 @@ const ProductDetail = () => {
                 console.log(error);
             }
         }
+        
         fetchProduct();
     }, [id]);
 
@@ -49,6 +50,9 @@ const ProductDetail = () => {
 
             if(res.status === 200) {
                 alert('Product added to cart successfully');
+            }
+            else if(response.status === 403) {
+                navigate('/login');
             }
             else if(res.status === 400) {
                 alert('Product could not be added to cart. Please try again later');

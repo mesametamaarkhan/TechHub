@@ -1,48 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import ProductCard from './ProductCard';
 import { motion } from 'framer-motion';
-
-const products = [
-  {
-    id: 1,
-    name: 'MacBook Pro M2',
-    price: 1299.99,
-    rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3',
-  },
-  {
-    id: 2,
-    name: 'iPhone 15 Pro',
-    price: 999.99,
-    rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-4.0.3',
-  },
-  // Add more products as needed
-];
+import { useNavigate } from 'react-router-dom';
 
 const BestSellers = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);    
+  const navigate = useNavigate();  
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/products/best-sellers"); 
+        setProducts(response.data.products);
+      } 
+      catch (error) {
+        console.error("Error fetching products", error);
+        setError("Failed to load products");
+      } 
+      finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <section className="py-12 bg-dark-greenish-gray">
       <div className="container mx-auto px-4 justify-center items-center">
         <h2 className="text-3xl font-bold text-center mb-8 text-white">Best Sellers</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {/* Show loading spinner or error message */}
+        {loading ? (
+          <p className="text-center text-white">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product, index) => (
-                <motion.div
-                    key={index}
-                    className="bg-black rounded-lg overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
-                >
-                    <ProductCard key={index} product={product} />
-                </motion.div>
+              <motion.div
+                key={product._id}
+                className="bg-black rounded-lg overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))}
-        </div>
+          </div>
+        )}
+
         <div className="text-center mt-8">
-          <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
+          <button 
+            onClick={() => navigate('/shop')}
+            className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
+          >
             Shop Now
           </button>
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default BestSellers;

@@ -6,7 +6,6 @@ import ProductCard from '../components/ProductCard';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
@@ -14,22 +13,13 @@ const Shop = () => {
             try {
                 const res = await axios.get("http://localhost:8080/products/");
                 setProducts(res.data.products);
-            } catch (error) {
+            } 
+            catch (error) {
                 console.log(error);
             }
         };
 
-        const getCategories = async () => {
-            try {
-                const res = await axios.get("http://localhost:8080/categories/");
-                setCategories(res.data.categories);
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-            }
-        };
-
         getProducts();
-        getCategories();
     }, []);
 
     const filteredProducts = products.filter(product => {

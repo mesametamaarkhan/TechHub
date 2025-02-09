@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import axios from 'axios';
 
@@ -6,8 +7,18 @@ const Profile = () => {
     const [openSection, setOpenSection] = useState('details');
     const [userDetails, setUserDetails] = useState(null);
     const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const checkAuthentication = () => {
+            const currentUser = JSON.parse(localStorage.getItem('user'));
+            const token = localStorage.getItem('accessToken');
+
+            if (!currentUser || !token) {
+                navigate('/login'); // Redirect to login page if not logged in
+            }
+        };
+
         const fetchUserDetails = async () => {
             const currentUser = JSON.parse(localStorage.getItem('user'));
             const token = localStorage.getItem('accessToken');
@@ -16,10 +27,14 @@ const Profile = () => {
                 const response = await axios.get(`http://localhost:8080/user/profile-page/${currentUser.id}`, 
                     {
                         headers: {
-                            Authentication: `Bearer ${token}`
+                            Authorization: `Bearer ${token}`
                         }
                     }
                 );
+
+                if(response.status === 403) {
+                    navigate('/login');
+                }
                 setUserDetails(response.data.user);
             } 
             catch (error) {
@@ -35,10 +50,14 @@ const Profile = () => {
                 const response = await axios.get(`http://localhost:8080/orders/${currentUser.id}`, 
                     {
                         headers: {
-                            Authentication: `Bearer ${token}`
+                            Authorization: `Bearer ${token}`
                         }
                     }
                 );
+
+                if(response.status === 403) {
+                    navigate('/login');
+                }
                 setOrders(response.data.orders);
             } 
             catch (error) {
@@ -46,6 +65,7 @@ const Profile = () => {
             }
         };
 
+        checkAuthentication();
         fetchUserDetails();
         fetchOrderHistory();
     }, []);

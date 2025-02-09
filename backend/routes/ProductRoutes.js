@@ -6,7 +6,7 @@ import { Product } from '../models/ProductModel.js';
 const router = express.Router();
 
 //get all products
-router.get('/', /*authenticateToken,*/ async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const products = await Product.aggregate([
             {
@@ -25,6 +25,31 @@ router.get('/', /*authenticateToken,*/ async (req, res) => {
     }
     catch(error) {
         res.status(500).json({ message: "Server error" });
+    }
+});
+
+//get first 3 products 
+router.get('/best-sellers', async (req, res) => {
+    try {
+        const products = await Product.aggregate([
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    categoryId: 1,
+                    shortDescription: 1,
+                    price: 1,
+                    firstImage: { $arrayElemAt: ["$images", 0] }
+                }
+            },
+            { 
+                $limit: 3 
+            }
+        ]);
+        res.status(200).json({ products });
+    } 
+    catch (error) {
+        res.status(500).json({ message: "Error fetching products", error });
     }
 });
 
@@ -93,22 +118,21 @@ router.put('/rate-product/:id', async (req, res) => {
 
 //Admin Only Routes
 //add a product
-router.post('/add-product', /*authenticateToken, authorizeAdmin,*/ async (req, res) => {
+router.post('/add-product', authenticateToken, authorizeAdmin, async (req, res) => {
     if(!req.body.title || !req.body.shortDescription || !req.body.fullDescription || !req.body.price 
-        || !req.body.stock || !req.body.categoryId || !req.body.features || !req.body.specs
+        || !req.body.stock || !req.body.features || !req.body.specs
     ) {
         return res.status(400).send({ message: 'Some required fields are missing!!', });
     }
 
     try {
-        const { title, shortDescription, fullDescription, price, stock, categoryId, images, features, specs } = req.body;
+        const { title, shortDescription, fullDescription, price, stock, images, features, specs } = req.body;
         const newProduct = new Product({
             title,
             shortDescription,
             fullDescription,
             price,
             stock,
-            categoryId, 
             images,
             features,
             specs
@@ -124,9 +148,7 @@ router.post('/add-product', /*authenticateToken, authorizeAdmin,*/ async (req, r
 
 //edit product
 router.put('/edit-product/:id', authenticateToken, authorizeAdmin, async (req, res) => {
-    if(!req.body.title || !req.body.description || !req.body.price || !req.body.stock
-        || !req.body.categoryId
-    ) {
+    if(!req.body.title || !req.body.description || !req.body.price || !req.body.stock) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
 

@@ -54,7 +54,7 @@ function CheckoutModal({ isOpen, onClose, total, tax }) {
       const response = await axios.post(`http://localhost:8080/orders/create-order`, formData,
         {
           headers: {
-            Authentication: `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         }
       );

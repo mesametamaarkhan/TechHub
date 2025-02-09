@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Leaf, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,6 +13,12 @@ const LoginPage = () => {
     password: '',
   });
 
+  useEffect(() => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -26,7 +32,7 @@ const LoginPage = () => {
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('refreshToken', response.data.refreshToken);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        navigate('/'); // Redirect to homepage on success
+        navigate('/');
       } 
       else if (response.status === 400) {
         setErrorMessage(response.data.message);

@@ -1,7 +1,9 @@
 import React from 'react';
 import laptop from '../assets/laptop.webp';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <div className="">
       <div className="relative h-[500px]">
@@ -20,11 +22,11 @@ const Hero = () => {
                 Discover amazing deals on the latest electronics and gadgets
               </p>
               <div className="space-x-4">
-                <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                <button 
+                  onClick={() => navigate('/shop')}
+                  className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                >
                   Shop Now
-                </button>
-                <button className="bg-green-800 text-gray-100 px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
-                  Explore Deals
                 </button>
               </div>
             </div>

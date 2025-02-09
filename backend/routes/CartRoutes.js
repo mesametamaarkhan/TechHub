@@ -5,7 +5,7 @@ import { Cart } from '../models/CartModel.js';
 const router = express.Router();
 
 //get a cart
-router.get('/:id', /*authenticateToken,*/ async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         
@@ -27,7 +27,7 @@ router.get('/:id', /*authenticateToken,*/ async (req, res) => {
 });
 
 //add items to cart
-router.put('/add-to-cart', /*authenticateToken,*/ async (req, res) => {
+router.put('/add-to-cart', authenticateToken, async (req, res) => {
     if(!req.body.userId || !req.body.productId || !req.body.quantity || !req.body.price || !req.body.productTitle || !req.body.productImage) {
         return res.status(400).send({ message: 'Some required fields are missing!!'});
     }
@@ -71,7 +71,7 @@ router.put('/add-to-cart', /*authenticateToken,*/ async (req, res) => {
 });
 
 //route to update cart product quantity
-router.put('/update-quantity/:id', /*authenticateToken,*/ async (req, res) => {
+router.put('/update-quantity/:id', authenticateToken, async (req, res) => {
     if(!req.body.userId) {
         return res.status(404).json({ message: 'Some required fields are missing' });
     }

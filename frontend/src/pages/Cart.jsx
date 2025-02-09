@@ -2,28 +2,24 @@ import { useEffect, useState } from 'react';
 import { FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
 import CheckoutModal from '../components/CheckoutModal';
 import axios from 'axios';
+import { useNavigate } from'react-router-dom';
 
 const CartPage = () => {
     const [cart, setCart] = useState({});
     const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: 'MacBook Pro',
-            price: 1299.99,
-            image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
-            quantity: 1,
-        },
-        {
-            id: 2,
-            name: 'iPhone 13 Pro',
-            price: 999.99,
-            image: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
-            quantity: 2,
-        },
-    ]);
+    const [cartItems, setCartItems] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const checkAuthentication = () => {
+            const currentUser = localStorage.getItem('user');
+            const token = localStorage.getItem('accessToken');
+
+            if (!currentUser || !token) {
+                navigate('/login'); // Redirect to login page if not logged in
+            }
+        };
+
         const fetchCart = async () => {
             const token = localStorage.getItem('accessToken');
             const user = JSON.parse(localStorage.getItem('user'));
@@ -37,6 +33,10 @@ const CartPage = () => {
                     }
                 );
 
+                if(response.status === 403) {
+                    navigate('/login');
+                }
+                
                 setCart(res.data.cart);
                 setCartItems(res.data.cart.items);
             }
@@ -44,6 +44,8 @@ const CartPage = () => {
                 console.log(error);
             }
         }
+
+        checkAuthentication();
         fetchCart();
     }, []);
 

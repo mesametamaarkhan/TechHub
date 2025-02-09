@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Leaf, Briefcase, GraduationCap, User, Mail, Lock, Eye, EyeOff, Image, Link2, PenTool, Star, Wrench, Calendar, Phone } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Leaf,  User, Mail, Lock, Eye, EyeOff, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -16,6 +16,12 @@ const SignupPage = () => {
         role: '',
         phone: '',
     });
+
+    useEffect(() => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+    }, []);
  
 
     const handleSubmit = async (e) => {
