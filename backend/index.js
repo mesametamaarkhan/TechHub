@@ -13,7 +13,9 @@ const app = express();
 app.use(express.json());
 
 //handling all cors (alternative is to use custom origins)
-app.use(cors()); 
+app.use(cors({
+    origin: ["http://localhost:5173", "https://your-production-frontend-url.com"]
+})); 
 
 //other custom middleware (route handling)
 app.use('/user', UserRoutes);
