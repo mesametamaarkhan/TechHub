@@ -13,7 +13,7 @@ const BestSellers = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/products/best-sellers"); 
+        const response = await axios.get("https://tech-mart-hb7jgm4su-mesametamaarkhans-projects.vercel.app/products/best-sellers"); 
         setProducts(response.data.products);
       } 
       catch (error) {
