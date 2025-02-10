@@ -4,6 +4,8 @@ import CheckoutModal from '../components/CheckoutModal';
 import axios from 'axios';
 import { useNavigate } from'react-router-dom';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const CartPage = () => {
     const [cart, setCart] = useState({});
     const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
@@ -25,7 +27,7 @@ const CartPage = () => {
             const user = JSON.parse(localStorage.getItem('user'));
 
             try {
-                const res = await axios.get(`http://localhost:8080/cart/${user.id}`, 
+                const res = await axios.get(`${API_BASE_URL}/cart/${user.id}`, 
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -54,7 +56,7 @@ const CartPage = () => {
             const token = localStorage.getItem('accessToken');
             const user = JSON.parse(localStorage.getItem('user'));
 
-            const res = await axios.put(`http://localhost:8080/cart/delete-item/${productId}`, 
+            const res = await axios.put(`${API_BASE_URL}/cart/delete-item/${productId}`, 
                 {
                     userId: user.id,
                 },
@@ -83,7 +85,7 @@ const CartPage = () => {
             const token = localStorage.getItem('accessToken');
             const user = JSON.parse(localStorage.getItem('user'));
 
-            const res = await axios.put(`http://localhost:8080/cart/update-quantity/${productId}`, 
+            const res = await axios.put(`${API_BASE_URL}/cart/update-quantity/${productId}`, 
                 {
                     userId: user.id,
                     add: add
@@ -115,7 +117,7 @@ const CartPage = () => {
 
     return (
         <>
-            <div className="bg-dark-greenish-gray pt-20 container mx-auto px-4 pb-8 ">
+            <div className="bg-dark-greenish-gray pt-20 container w-full min-h-screen max-w-screen-2xl mx-auto px-4 pb-8 ">
                 <h1 className="text-3xl font-bold mb-8 text-white">Shopping Cart</h1>
             
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

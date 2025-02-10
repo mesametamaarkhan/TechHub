@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Profile = () => {
     const [openSection, setOpenSection] = useState('details');
     const [userDetails, setUserDetails] = useState(null);
@@ -24,7 +26,7 @@ const Profile = () => {
             const token = localStorage.getItem('accessToken');
 
             try {
-                const response = await axios.get(`http://localhost:8080/user/profile-page/${currentUser.id}`, 
+                const response = await axios.get(`${API_BASE_URL}/user/profile-page/${currentUser.id}`, 
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -47,7 +49,7 @@ const Profile = () => {
             const token = localStorage.getItem('accessToken');
 
             try {
-                const response = await axios.get(`http://localhost:8080/orders/${currentUser.id}`, 
+                const response = await axios.get(`${API_BASE_URL}/orders/${currentUser.id}`, 
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -78,7 +80,7 @@ const Profile = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('accessToken');
-            const res = await axios.put(`http://localhost:8080/user/update-profile/${userDetails._id}`, userDetails,
+            const res = await axios.put(`${API_BASE_URL}/user/update-profile/${userDetails._id}`, userDetails,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -121,7 +123,7 @@ const Profile = () => {
             const currentUser = JSON.parse(localStorage.getItem("user"));
     
             const response = await axios.post(
-                `http://localhost:8080/user/reset-password/${currentUser.id}`,
+                `${API_BASE_URL}/user/reset-password/${currentUser.id}`,
                 { 
                     password: currentPassword, 
                     newPassword 
@@ -149,11 +151,11 @@ const Profile = () => {
     
 
     if (!userDetails) {
-        return <div className="text-white text-center pt-24">Loading...</div>;
+        return <div className="text-black bg-dark-greenish-gray min-h-screen text-center pt-24">Loading...</div>;
     }
 
     return (
-        <div className="bg-dark-greenish-gray pt-24 container mx-auto px-4 py-8">
+        <div className="bg-dark-greenish-gray pt-24 container mx-auto w-full max-w-screen-2xl px-4 py-8">
             <h1 className="text-3xl font-bold mb-8 text-gray-100">My Profile</h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

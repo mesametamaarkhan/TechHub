@@ -4,6 +4,8 @@ import ProductCard from './ProductCard';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const BestSellers = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +15,7 @@ const BestSellers = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://tech-mart-hb7jgm4su-mesametamaarkhans-projects.vercel.app/products/best-sellers"); 
+        const response = await axios.get(`${API_BASE_URL}/products/best-sellers`); 
         setProducts(response.data.products);
       } 
       catch (error) {

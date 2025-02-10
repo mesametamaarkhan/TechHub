@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function CheckoutModal({ isOpen, onClose, total, tax }) {
   if (!isOpen) return null;
 
@@ -51,7 +53,7 @@ function CheckoutModal({ isOpen, onClose, total, tax }) {
     try {
       formData.userId = user.id;
       formData.tax = tax;
-      const response = await axios.post(`http://localhost:8080/orders/create-order`, formData,
+      const response = await axios.post(`${API_BASE_URL}/orders/create-order`, formData,
         {
           headers: {
             Authorization: `Bearer ${token}`

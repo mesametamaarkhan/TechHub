@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +26,7 @@ const LoginPage = () => {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('http://localhost:8080/user/login', formData, {
+      const response = await axios.post(`${API_BASE_URL}/user/login`, formData, {
         headers: { 'Content-Type': 'application/json' }
       });
 

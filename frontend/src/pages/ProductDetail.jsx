@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const ProductDetail = () => {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('description');
@@ -16,7 +18,7 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await axios.get(`http://localhost:8080/products/${id}`);
+                const res = await axios.get(`${API_BASE_URL}/products/${id}`);
                 setProduct(res.data.product);
                 setRecommendedProducts(res.data.recommendedProducts);
             }
@@ -38,7 +40,7 @@ const ProductDetail = () => {
                 navigate('/login');
             }
 
-            const res = await axios.put(`http://localhost:8080/cart/add-to-cart`, 
+            const res = await axios.put(`${API_BASE_URL}/cart/add-to-cart`, 
                 {
                     userId: user.id,
                     productId: id,
@@ -77,11 +79,11 @@ const ProductDetail = () => {
         setActiveImage((prev) => (prev - 1 + product.images.length) % product.images.length);
     };
 
-    if (!product) return <div>Loading...</div>;
-    if (!product || !product.images) return <div>Product not found</div>;
+    if (!product) return <div className='text-black bg-dark-greenish-gray min-h-screen text-center pt-24'>Loading...</div>;
+    if (!product || !product.images) return <div className='text-black bg-dark-greenish-gray min-h-screen text-center pt-24'>Product not found</div>;
 
     return (
-        <div className='container mx-auto px-4 mt-12 bg-dark-greenish-gray'>
+        <div className='container mx-auto px-4 mt-12 bg-dark-greenish-gray min-h-screen'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 mt-12'>
                 <div className='relative'>
                     <div className='aspect-square overflow-hidden rounded-lg bg-dark-greenish-gray'>

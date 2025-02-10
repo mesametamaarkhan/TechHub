@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const SignupPage = () => {
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
@@ -34,7 +36,7 @@ const SignupPage = () => {
             return;
           }
             
-          const response = await axios.post('http://localhost:8080/user/register', formData, {
+          const response = await axios.post(`${API_BASE_URL}/user/register`, formData, {
               headers: { 'Content-Type': 'application/json' }
           });
 

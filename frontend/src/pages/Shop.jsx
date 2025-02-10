@@ -4,6 +4,8 @@ import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -11,7 +13,7 @@ const Shop = () => {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/products/");
+                const res = await axios.get(`${API_BASE_URL}/products/`);
                 setProducts(res.data.products);
             } 
             catch (error) {
