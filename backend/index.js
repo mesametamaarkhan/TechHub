@@ -13,11 +13,12 @@ const app = express();
 app.use(express.json());
 
 //handling all cors (alternative is to use custom origins)
-app.use(cors({
-    origin: ["http://localhost:5173", "https://tech-mart-m92x.vercel.app/"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-})); 
+app.use(cors());
+// app.use(cors({
+//     origin: ["http://localhost:5173", "https://tech-mart-m92x.vercel.app/"],
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     allowedHeaders: "Content-Type,Authorization",
+// })); 
 
 //other custom middleware (route handling)
 app.use('/user', UserRoutes);
