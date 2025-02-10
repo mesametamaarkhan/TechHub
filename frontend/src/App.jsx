@@ -1,16 +1,16 @@
 import React from 'react';
 import { Routes, Route, Router, useNavigate } from 'react-router-dom';
 import Home from './pages/Home.jsx';
-import Navbar from "@/components/Navbar.jsx";
-import Footer from '@/components/Footer.jsx';
-import Shop from '@/pages/Shop.jsx';
-import ProductDetail from '@/pages/ProductDetail.jsx';
-import SignupPage from '@/pages/SignUp.jsx';
-import LoginPage from '@/pages/Login.jsx';
-import CartPage from '@/pages/Cart.jsx';
-import Profile from '@/pages/Profile.jsx';
-import useTokenRefresher from '@/utility/UseTokenRefresher.js';
-import AboutUs from '@/pages/About.jsx';
+import Navbar from "./components/Navbar.jsx";
+import Footer from './components/Footer.jsx';
+import Shop from './pages/Shop.jsx';
+import ProductDetail from './pages/ProductDetail.jsx';
+import SignupPage from './pages/SignUp.jsx';
+import LoginPage from './pages/Login.jsx';
+import CartPage from './pages/Cart.jsx';
+import Profile from './pages/Profile.jsx';
+import useTokenRefresher from './utility/UseTokenRefresher.js';
+import AboutUs from './pages/About.jsx';
 
 const App = () => {
   const navigate = useNavigate();
