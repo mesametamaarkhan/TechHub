@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Router, useNavigate } from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import Footer from './components/Footer.jsx';
-import Navbar from "./components/Navbar.jsx";
+// import Navbar from "./components/Navbar.jsx";
 import Shop from './pages/Shop.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import SignupPage from './pages/SignUp.jsx';
@@ -18,7 +18,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
+      {/*<Navbar /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
