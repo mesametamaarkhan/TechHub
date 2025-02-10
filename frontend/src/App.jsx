@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Router, useNavigate } from 'react-router-dom';
 import Home from './pages/Home.jsx';
-// import Navbar from "./components/Navbar.jsx";
 import Footer from './components/Footer.jsx';
+import Navbar from "./components/Navbar.jsx";
 import Shop from './pages/Shop.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import SignupPage from './pages/SignUp.jsx';
