@@ -14,7 +14,7 @@ app.use(express.json());
 
 //handling all cors (alternative is to use custom origins)
 app.use(cors({
-    origin: ["http://localhost:5173", "https://your-production-frontend-url.com"],
+    origin: ["http://localhost:5173", "https://tech-mart-m92x.vercel.app/"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
 })); 
