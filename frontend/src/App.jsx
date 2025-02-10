@@ -18,7 +18,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* <Navbar /> */}
+      <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
