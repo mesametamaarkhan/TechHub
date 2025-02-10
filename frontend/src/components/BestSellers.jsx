@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import ProductCard from './ProductCard';
+import ProductCard from './ProductCard.jsx';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 

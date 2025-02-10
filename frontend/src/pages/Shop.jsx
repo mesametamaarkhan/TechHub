@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ProductCard from '../components/ProductCard';
+import ProductCard from '../components/ProductCard.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 

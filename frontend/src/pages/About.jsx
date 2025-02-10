@@ -1,6 +1,6 @@
 import { FiAward, FiUsers, FiTruck, FiHeadphones } from 'react-icons/fi';
 
-function AboutUs() {
+const AboutUs = () => {
   const features = [
     {
       icon: <FiAward size={24} />,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
-import CheckoutModal from '../components/CheckoutModal';
+import CheckoutModal from '../components/CheckoutModal.jsx';
 import axios from 'axios';
 import { useNavigate } from'react-router-dom';
 

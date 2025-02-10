@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
 
-function DisclaimerModal() {
+const DisclaimerModal = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, Plus, Star } from 'lucide-react'
-import ProductCard from '../components/ProductCard';
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Plus, Star } from 'lucide-react';
+import ProductCard from '../components/ProductCard.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';

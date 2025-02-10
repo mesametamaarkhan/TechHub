@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function CheckoutModal({ isOpen, onClose, total, tax }) {
+const CheckoutModal = ({ isOpen, onClose, total, tax }) => {
   if (!isOpen) return null;
 
   const [formData, setFormData] = useState({
