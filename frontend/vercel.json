@@ -1,6 +1,13 @@
 {
   "version": 2,
-  "public": "dist",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {}
+    }
+  ],
+  "framework": "vite",
   "routes": [
     {
       "src": "/(.*)",
